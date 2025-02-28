@@ -1,3 +1,4 @@
+import { Send } from './../../node_modules/@types/express-serve-static-core/index.d';
 import { white } from './../../node_modules/@colors/colors/index.d';
 import { Controller, Get, Post, Body, Param, Redirect, HttpCode, HttpStatus, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ShortenerService } from './shortener.service';
@@ -15,12 +16,15 @@ export class ShortenerController {
     return res;
   }
 
-  @Get("/{token}")
-  async toOriginalUrl(@Param('token') token) {
-    
-    const res = this.shortenerService.toOriginalUrl(token);
-    
-    Redirect("https://www.google.com", HttpStatus.OK);
+  @Get(":token")
+  @Redirect()
+  async toOriginalUrl(@Param('token') token: string) {
+    const url = await this.shortenerService.toOriginalUrl(token);
+    if (url) {
+      return { url };
+    } else {
+      return { url: 'https://www.google.com' }; // Default redirect if URL not found
+    }
   }
 
 
