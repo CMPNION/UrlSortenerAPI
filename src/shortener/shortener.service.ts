@@ -14,7 +14,7 @@ export class ShortenerService {
         const token = gen.generate();
         const dbconn = await connectToDatabase(process.env.DB_NAME, process.env.DB_COLLECTION);
         dbconn.shortener.insertOne({url: url, token: token });
-        var shortUrl =  "localhost:8080/api/v1/"+ token;
+        var shortUrl =  process.env.ROOT_URL+ token;
 
         return shortUrl;
     }
